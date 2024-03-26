@@ -5,6 +5,6 @@ public interface BeanFactory {
 
     Boolean containsBean(String name);
 
-    void registerBean(BeanDefinition beanDefinition);
+    void registerBean(String beanName, Object obj);
 
 }

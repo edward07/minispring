@@ -3,13 +3,13 @@ package org.greentree;
 import org.dom4j.Element;
 
 public class XmlBeanDefinitionReader {
-    BeanFactory beanFactory;
+    SimpleBeanFactory beanFactory;
 
     public BeanFactory getBeanFactory() {
         return this.beanFactory;
     }
 
-    public XmlBeanDefinitionReader(BeanFactory beanFactory) {
+    public XmlBeanDefinitionReader(SimpleBeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
 
@@ -19,7 +19,7 @@ public class XmlBeanDefinitionReader {
             String id = element.attributeValue("id");
             String className = element.attributeValue("class");
             BeanDefinition beanDefinition = new BeanDefinition(id, className);
-            this.beanFactory.registerBean(beanDefinition);
+            beanFactory.registerBeanDefinition(beanDefinition);
         }
     }
 

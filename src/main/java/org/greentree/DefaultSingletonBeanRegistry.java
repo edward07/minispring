@@ -27,8 +27,8 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
     }
 
     @Override
-    public List<String> getSingletonNames() {
-        return beanNames;
+    public String[] getSingletonNames() {
+        return (String[]) beanNames.toArray();
     }
 
     protected void removeSingleton(String beanName) {

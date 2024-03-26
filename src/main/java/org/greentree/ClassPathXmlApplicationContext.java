@@ -1,16 +1,7 @@
 package org.greentree;
 
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class ClassPathXmlApplicationContext implements BeanFactory {
-    BeanFactory beanFactory;
+    private SimpleBeanFactory beanFactory;
     //构造器获取外部配置，解析出Bean的定义，形成内存映像
     public ClassPathXmlApplicationContext(String fileName) {
         ClassPathXmlResource resource = new ClassPathXmlResource(fileName);
@@ -31,7 +22,7 @@ public class ClassPathXmlApplicationContext implements BeanFactory {
     }
 
     @Override
-    public void registerBean(BeanDefinition beanDefinition) {
-        beanFactory.registerBean(beanDefinition);
+    public void registerBean(String beanName, Object obj) {
+        beanFactory.registerBean(beanName, obj);
     }
 }
