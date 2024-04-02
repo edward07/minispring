@@ -1,5 +1,8 @@
 package org.greentree.core;
 
+import lombok.Data;
+
+@Data
 public class ArgumentValue {
     private Object value;
 
