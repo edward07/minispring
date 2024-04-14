@@ -1,6 +1,9 @@
 package org.greentree;
 
-public class ClassPathXmlApplicationContext implements BeanFactory {
+import org.greentree.core.ApplicationEvent;
+import org.greentree.core.ApplicationEventPublisher;
+
+public class ClassPathXmlApplicationContext implements BeanFactory, ApplicationEventPublisher {
     private SimpleBeanFactory beanFactory;
     //构造器获取外部配置，解析出Bean的定义，形成内存映像
     public ClassPathXmlApplicationContext(String fileName) {
@@ -24,5 +27,25 @@ public class ClassPathXmlApplicationContext implements BeanFactory {
     @Override
     public void registerBean(String beanName, Object obj) {
         beanFactory.registerBean(beanName, obj);
+    }
+
+    @Override
+    public boolean isSingleton(String beanName) {
+        return beanFactory.isSingleton(beanName);
+    }
+
+    @Override
+    public boolean isPrototype(String beanName) {
+        return beanFactory.isPrototype(beanName);
+    }
+
+    @Override
+    public Class<?> getType(String beanName) {
+        return beanFactory.getType(beanName);
+    }
+
+    @Override
+    public void publish(ApplicationEvent applicationEvent) {
+
     }
 }
