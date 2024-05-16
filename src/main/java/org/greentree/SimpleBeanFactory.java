@@ -1,5 +1,9 @@
 package org.greentree;
 
+import org.greentree.core.ArgumentValue;
+import org.greentree.core.ArgumentValues;
+
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +80,48 @@ public class SimpleBeanFactory extends DefaultSingletonBeanRegistry implements B
 
     public Class<?> getType(String beanName) {
         return this.beanDefinitionMap.get(beanName).getBeanClass();
+    }
+
+    private Object createBean(BeanDefinition beanDefinition) {
+        Class<?> clz = null;
+        Object obj = null;
+        Constructor<?> con = null;
+        try {
+            clz = Class.forName(beanDefinition.getClassName());
+            // 处理构造器参数
+            ArgumentValues argumentValues = beanDefinition.getArgumentValues();
+            if (!argumentValues.isEmpty()) {
+                Class<?>[] paramTypes = new Class<?>[argumentValues.getArgumentCount()];
+                Object[] paramValues = new Object[argumentValues.getArgumentCount()];
+                for (int i = 0; i < argumentValues.getArgumentCount(); i++) {
+                    ArgumentValue argumentValue = argumentValues.getIndexedArgumentValue(i);
+                    if ("String".equals(argumentValue.getType()) || "java.lang.String".equals(argumentValue.getType())) {
+                        paramTypes[i] = String.class;
+                        paramValues[i] = argumentValue.getValue();
+                    } else if ("Integer".equals(argumentValue.getType()) || "java.lang.Integer".equals(argumentValue.getType())) {
+                        paramTypes[i] = Integer.class;
+                        paramValues[i] = Integer.parseInt((String)argumentValue.getValue());
+                    } else if ("int".equals(argumentValue.getType())) {
+                        paramTypes[i] = int.class;
+                        paramValues[i] = Integer.parseInt((String)argumentValue.getValue());
+                    } else {
+                        paramTypes[i] = String.class;
+                        paramValues[i] = argumentValue.getValue();
+                    }
+                }
+                try {
+                    con = clz.getConstructor(paramTypes);
+                    obj = con.newInstance(argumentValues);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            // 处理
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return obj;
     }
 
 }

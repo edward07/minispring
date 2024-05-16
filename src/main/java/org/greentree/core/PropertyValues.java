@@ -1,18 +1,17 @@
 package org.greentree.core;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class PropertyValues {
 
     private final List<PropertyValue> propertyValueList;
 
     public PropertyValues() {
         this.propertyValueList = new ArrayList<>(0);
-    }
-
-    public List<PropertyValue> getPropertyValueList() {
-        return this.propertyValueList;
     }
 
     public int size() {
@@ -24,7 +23,7 @@ public class PropertyValues {
     }
 
     public void addPropertyValue(String propertyName, Object propertyValue) {
-        this.addPropertyValue(new PropertyValue(propertyName, propertyValue));
+        this.addPropertyValue(new PropertyValue(propertyName, propertyValue, ""));
     }
 
     public void removePropertyValue(PropertyValue pv) {
