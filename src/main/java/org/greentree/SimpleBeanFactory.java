@@ -2,16 +2,21 @@ package org.greentree;
 
 import org.greentree.core.ArgumentValue;
 import org.greentree.core.ArgumentValues;
+import org.greentree.core.PropertyValue;
+import org.greentree.core.PropertyValues;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SimpleBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory, BeanDefinitionRegistry {
-    private Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>(256);
-    private List<String> beanDefinitionNames = new ArrayList<>(0);
+    private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>(256);
+    private final List<String> beanDefinitionNames = new ArrayList<>(0);
+    private final Map<String, Object> earlySingletonObjects = new HashMap<>(256);
 
     public SimpleBeanFactory() {
     }
@@ -20,17 +25,15 @@ public class SimpleBeanFactory extends DefaultSingletonBeanRegistry implements B
     public Object getBean(String beanName) throws BeanException {
         Object singleton = this.getSingleton(beanName);
         if (singleton == null) {
-            BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
-            if (beanDefinition == null) {
-                return new BeanException("No such bean.");
+            singleton = this.earlySingletonObjects.get(beanName);
+            if (singleton == null) {
+                BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
+                if (beanDefinition == null) {
+                    return new BeanException("No such bean.");
+                }
+                singleton = createBean(beanDefinition);
+                this.registerSingleton(beanDefinition.getId(), singleton);
             }
-            try {
-                singleton = Class.forName(beanDefinition.getClassName()).newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new BeanException("Error occurs when creating bean " + beanDefinition.getId());
-            }
-            this.registerSingleton(beanDefinition.getId(), singleton);
         }
         return singleton;
     }
@@ -84,6 +87,19 @@ public class SimpleBeanFactory extends DefaultSingletonBeanRegistry implements B
 
     private Object createBean(BeanDefinition beanDefinition) {
         Class<?> clz = null;
+        Object obj = doCreateBean(beanDefinition);
+        this.earlySingletonObjects.put(beanDefinition.getId(), obj);
+        try {
+            clz = Class.forName(beanDefinition.getClassName());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        handleProperties(beanDefinition, clz, obj);
+        return obj;
+    }
+
+    private Object doCreateBean(BeanDefinition beanDefinition) {
+        Class<?> clz = null;
         Object obj = null;
         Constructor<?> con = null;
         try {
@@ -111,17 +127,77 @@ public class SimpleBeanFactory extends DefaultSingletonBeanRegistry implements B
                 }
                 try {
                     con = clz.getConstructor(paramTypes);
-                    obj = con.newInstance(argumentValues);
+                    obj = con.newInstance(paramValues);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else {
+                obj = clz.newInstance();
             }
-            // 处理
+            // 处理属性参数
+            //this.handleProperties(beanDefinition, clz, obj);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return obj;
+    }
+
+    private void handleProperties(BeanDefinition bd, Class<?> clz, Object obj) {
+        PropertyValues propertyValues = bd.getPropertyValues();
+        if (!propertyValues.isEmpty()) {
+            List<PropertyValue> propertyValueList = propertyValues.getPropertyValueList();
+            for (int i = 0; i < propertyValueList.size(); i++) {
+                PropertyValue propertyValue = propertyValueList.get(i);
+                String type = propertyValue.getType();
+                String name = propertyValue.getName();
+                Object value = propertyValue.getValue();
+                boolean isRef = propertyValue.isRef();
+                Class<?>[] paramTypes = new Class[1];
+                Object[] paramValues = new Object[1];
+                if (!isRef) {
+                    if ("String".equals(type) || "java.lang.String".equals(type)) {
+                        paramTypes[0] = String.class;
+                    } else if ("Integer".equals(type) || "java.lang.Integer".equals(type)) {
+                        paramTypes[0] = Integer.class;
+                    } else if ("int".equals(type)) {
+                        paramTypes[0] = int.class;
+                    } else {
+                        paramTypes[0] = String.class;
+                    }
+                    paramValues[0] = value;
+                } else {
+                    try {
+                        paramTypes[0] = Class.forName(type);
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        paramValues[0] = this.getBean((String)value);
+                    } catch (BeanException e) {
+                        e.printStackTrace();
+                    }
+                }
+                String setterName = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
+                Method method = null;
+                try {
+                    method = clz.getMethod(setterName, paramTypes);
+                    method.invoke(obj, paramValues);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void refresh() {
+        for (String beanName : beanDefinitionNames) {
+            try {
+                this.getBean(beanName);
+            } catch (BeanException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

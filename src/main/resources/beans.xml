@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <beans>
-    <bean id = "aservice" class = "org.greentree.test.MyInterfaceImpl"></bean>
+    <bean id = "aservice" class = "org.greentree.test.AServiceImpl">
+        <constructor-arg type="String" name="name" value="abc"/>
+        <constructor-arg type="int" name="level" value="3"/>
+        <property type="String" name="property1" value="Someone says"/>
+        <property type="String" name="property2" value="Hello World!"/>
+        <property type="org.greentree.test.BaseService" name="ref1"
+                  ref="baseservice"/>
+    </bean>
+    <bean id="basebaseservice" class="org.greentree.test.BaseBaseService">
+        <property type="org.greentree.test.AServiceImpl" name="as" ref="aservice" />
+    </bean>
+    <bean id="baseservice" class="org.greentree.test.BaseService">
+        <property type="org.greentree.test.BaseBaseService" name="bbs"
+                  ref="basebaseservice" />
+    </bean>
 </beans>

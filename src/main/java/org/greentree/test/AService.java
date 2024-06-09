@@ -1,5 +1,5 @@
 package org.greentree.test;
 
-public interface MyInterface {
+public interface AService {
     void sayHello();
 }

@@ -22,9 +22,9 @@ public class PropertyValues {
         this.propertyValueList.add(pv);
     }
 
-    public void addPropertyValue(String propertyName, Object propertyValue) {
-        this.addPropertyValue(new PropertyValue(propertyName, propertyValue, ""));
-    }
+//    public void addPropertyValue(String propertyName, Object propertyValue) {
+//        this.addPropertyValue(new PropertyValue(propertyName, propertyValue, false));
+//    }
 
     public void removePropertyValue(PropertyValue pv) {
         this.propertyValueList.remove(pv);
