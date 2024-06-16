@@ -1,8 +1,12 @@
-package org.greentree;
+package org.greentree.beans.factory.xml;
 
 import org.dom4j.Element;
-import org.greentree.core.ArgumentValue;
-import org.greentree.core.ArgumentValues;
+import org.greentree.beans.factory.config.BeanDefinition;
+import org.greentree.Resource;
+import org.greentree.beans.factory.support.SimpleBeanFactory;
+import org.greentree.beans.factory.BeanFactory;
+import org.greentree.beans.factory.config.ConstructorArgumentValue;
+import org.greentree.beans.factory.config.ConstructorArgumentValues;
 import org.greentree.core.PropertyValue;
 import org.greentree.core.PropertyValues;
 
@@ -52,12 +56,12 @@ public class XmlBeanDefinitionReader {
             beanDefinition.setDependsOn(refArray);
 
             List<Element> constructorElements = element.elements("constructor-arg");
-            ArgumentValues avs = new ArgumentValues();
+            ConstructorArgumentValues avs = new ConstructorArgumentValues();
             for (Element ele : constructorElements) {
                 String aType = ele.attributeValue("type");
                 String aName = ele.attributeValue("name");
                 String aValue = ele.attributeValue("value");
-                avs.addArgumentValue(new ArgumentValue(aValue, aType, aName));
+                avs.addArgumentValue(new ConstructorArgumentValue(aValue, aType, aName));
             }
             beanDefinition.setArgumentValues(avs);
 

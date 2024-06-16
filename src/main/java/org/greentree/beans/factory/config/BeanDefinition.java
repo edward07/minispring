@@ -1,7 +1,6 @@
-package org.greentree;
+package org.greentree.beans.factory.config;
 
 import lombok.Data;
-import org.greentree.core.ArgumentValues;
 import org.greentree.core.PropertyValues;
 
 @Data
@@ -12,7 +11,7 @@ public class BeanDefinition {
     private boolean lazyInit = false;
     private String scope = SCOPE_SINGLETON;
     private String[] dependsOn;
-    private ArgumentValues argumentValues;
+    private ConstructorArgumentValues argumentValues;
     private PropertyValues propertyValues;
     private String initMethodName;
     private volatile Object beanClass;

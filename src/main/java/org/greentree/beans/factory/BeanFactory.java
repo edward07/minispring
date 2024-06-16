@@ -1,4 +1,4 @@
-package org.greentree;
+package org.greentree.beans.factory;
 
 public interface BeanFactory {
     Object getBean(String beanName) throws Exception;

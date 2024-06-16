@@ -1,7 +1,10 @@
-package org.greentree;
+package org.greentree.beans.factory.support;
 
-import org.greentree.core.ArgumentValue;
-import org.greentree.core.ArgumentValues;
+import org.greentree.beans.factory.config.BeanDefinition;
+import org.greentree.BeanException;
+import org.greentree.beans.factory.BeanFactory;
+import org.greentree.beans.factory.config.ConstructorArgumentValue;
+import org.greentree.beans.factory.config.ConstructorArgumentValues;
 import org.greentree.core.PropertyValue;
 import org.greentree.core.PropertyValues;
 
@@ -105,12 +108,12 @@ public class SimpleBeanFactory extends DefaultSingletonBeanRegistry implements B
         try {
             clz = Class.forName(beanDefinition.getClassName());
             // 处理构造器参数
-            ArgumentValues argumentValues = beanDefinition.getArgumentValues();
+            ConstructorArgumentValues argumentValues = beanDefinition.getArgumentValues();
             if (!argumentValues.isEmpty()) {
                 Class<?>[] paramTypes = new Class<?>[argumentValues.getArgumentCount()];
                 Object[] paramValues = new Object[argumentValues.getArgumentCount()];
                 for (int i = 0; i < argumentValues.getArgumentCount(); i++) {
-                    ArgumentValue argumentValue = argumentValues.getIndexedArgumentValue(i);
+                    ConstructorArgumentValue argumentValue = argumentValues.getIndexedArgumentValue(i);
                     if ("String".equals(argumentValue.getType()) || "java.lang.String".equals(argumentValue.getType())) {
                         paramTypes[i] = String.class;
                         paramValues[i] = argumentValue.getValue();

@@ -1,21 +1,21 @@
-package org.greentree.core;
+package org.greentree.beans.factory.config;
 
 import lombok.Data;
 
 @Data
-public class ArgumentValue {
+public class ConstructorArgumentValue {
     private Object value;
 
     private String type;
 
     private String name;
 
-    public ArgumentValue(Object value, String type) {
+    public ConstructorArgumentValue(Object value, String type) {
         this.value = value;
         this.type = type;
     }
 
-    public ArgumentValue(Object value, String type, String name) {
+    public ConstructorArgumentValue(Object value, String type, String name) {
         this.value = value;
         this.type = type;
         this.name = name;

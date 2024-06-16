@@ -1,4 +1,6 @@
-package org.greentree;
+package org.greentree.beans.factory.support;
+
+import org.greentree.beans.factory.config.SingletonBeanRegistry;
 
 import java.util.ArrayList;
 import java.util.List;

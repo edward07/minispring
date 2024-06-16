@@ -1,4 +1,6 @@
-package org.greentree;
+package org.greentree.beans.factory.support;
+
+import org.greentree.beans.factory.config.BeanDefinition;
 
 public interface BeanDefinitionRegistry {
 

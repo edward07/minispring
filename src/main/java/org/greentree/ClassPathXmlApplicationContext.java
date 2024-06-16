@@ -1,5 +1,8 @@
 package org.greentree;
 
+import org.greentree.beans.factory.BeanFactory;
+import org.greentree.beans.factory.support.SimpleBeanFactory;
+import org.greentree.beans.factory.xml.XmlBeanDefinitionReader;
 import org.greentree.core.ApplicationEvent;
 import org.greentree.core.ApplicationEventPublisher;
 

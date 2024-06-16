@@ -1,4 +1,4 @@
-package org.greentree;
+package org.greentree.beans.factory.config;
 
 public interface SingletonBeanRegistry {
 
