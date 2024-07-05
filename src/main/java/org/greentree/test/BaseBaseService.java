@@ -11,4 +11,8 @@ public class BaseBaseService {
 
     }
 
+    public void sayHello() {
+        System.out.println("Hello from BaseBaseService...");
+    }
+
 }

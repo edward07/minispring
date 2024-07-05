@@ -1,10 +1,10 @@
 package org.greentree.beans.factory.xml;
 
 import org.dom4j.Element;
-import org.greentree.beans.factory.config.BeanDefinition;
 import org.greentree.Resource;
-import org.greentree.beans.factory.support.SimpleBeanFactory;
+import org.greentree.beans.factory.AutowireCapableBeanFactory;
 import org.greentree.beans.factory.BeanFactory;
+import org.greentree.beans.factory.config.BeanDefinition;
 import org.greentree.beans.factory.config.ConstructorArgumentValue;
 import org.greentree.beans.factory.config.ConstructorArgumentValues;
 import org.greentree.core.PropertyValue;
@@ -14,13 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XmlBeanDefinitionReader {
-    SimpleBeanFactory beanFactory;
+    AutowireCapableBeanFactory beanFactory;
 
     public BeanFactory getBeanFactory() {
         return this.beanFactory;
     }
 
-    public XmlBeanDefinitionReader(SimpleBeanFactory beanFactory) {
+    public XmlBeanDefinitionReader(AutowireCapableBeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
 
@@ -65,7 +65,7 @@ public class XmlBeanDefinitionReader {
             }
             beanDefinition.setArgumentValues(avs);
 
-            beanFactory.registerBeanDefinition(beanDefinition);
+            beanFactory.registerBeanDefinition(beanDefinition.getId(), beanDefinition);
         }
     }
 

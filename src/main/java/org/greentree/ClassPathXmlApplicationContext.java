@@ -1,13 +1,13 @@
 package org.greentree;
 
+import org.greentree.beans.factory.AutowireCapableBeanFactory;
 import org.greentree.beans.factory.BeanFactory;
-import org.greentree.beans.factory.support.SimpleBeanFactory;
 import org.greentree.beans.factory.xml.XmlBeanDefinitionReader;
 import org.greentree.core.ApplicationEvent;
 import org.greentree.core.ApplicationEventPublisher;
 
 public class ClassPathXmlApplicationContext implements BeanFactory, ApplicationEventPublisher {
-    private SimpleBeanFactory beanFactory;
+    private AutowireCapableBeanFactory beanFactory;
 
     public ClassPathXmlApplicationContext(String fileName) {
         this(fileName, true);
@@ -16,7 +16,7 @@ public class ClassPathXmlApplicationContext implements BeanFactory, ApplicationE
     //构造器获取外部配置，解析出Bean的定义，形成内存映像
     public ClassPathXmlApplicationContext(String fileName, boolean isRefresh) {
         ClassPathXmlResource resource = new ClassPathXmlResource(fileName);
-        this.beanFactory = new SimpleBeanFactory();
+        this.beanFactory = new AutowireCapableBeanFactory();
         XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
         reader.loadBeanDefinitions(resource);
         if (isRefresh) {

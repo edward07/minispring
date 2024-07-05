@@ -1,7 +1,7 @@
 package org.greentree.beans.factory.support;
 
 import org.greentree.beans.factory.config.BeanDefinition;
-import org.greentree.BeanException;
+import org.greentree.BeansException;
 import org.greentree.beans.factory.BeanFactory;
 import org.greentree.beans.factory.config.ConstructorArgumentValue;
 import org.greentree.beans.factory.config.ConstructorArgumentValues;
@@ -25,14 +25,14 @@ public class SimpleBeanFactory extends DefaultSingletonBeanRegistry implements B
     }
 
     @Override
-    public Object getBean(String beanName) throws BeanException {
+    public Object getBean(String beanName) throws BeansException {
         Object singleton = this.getSingleton(beanName);
         if (singleton == null) {
             singleton = this.earlySingletonObjects.get(beanName);
             if (singleton == null) {
                 BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
                 if (beanDefinition == null) {
-                    return new BeanException("No such bean.");
+                    return new BeansException("No such bean.");
                 }
                 singleton = createBean(beanDefinition);
                 this.registerSingleton(beanDefinition.getId(), singleton);
@@ -177,7 +177,7 @@ public class SimpleBeanFactory extends DefaultSingletonBeanRegistry implements B
                     }
                     try {
                         paramValues[0] = this.getBean((String)value);
-                    } catch (BeanException e) {
+                    } catch (BeansException e) {
                         e.printStackTrace();
                     }
                 }
@@ -197,7 +197,7 @@ public class SimpleBeanFactory extends DefaultSingletonBeanRegistry implements B
         for (String beanName : beanDefinitionNames) {
             try {
                 this.getBean(beanName);
-            } catch (BeanException e) {
+            } catch (BeansException e) {
                 e.printStackTrace();
             }
         }
